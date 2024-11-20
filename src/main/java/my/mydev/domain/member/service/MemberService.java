@@ -1,34 +1,50 @@
 package my.mydev.domain.member.service;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import my.mydev.domain.member.domain.Member;
 import my.mydev.domain.member.dto.MemberDto;
 import my.mydev.domain.member.repository.MemberRepository;
+import my.mydev.global.security.MemberUserDetails;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
-public class MemberService {
+public class MemberService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    @PostConstruct
+    public void init() {
+        /* 관리자 계정 생성*/
+        Member member =
+    }
 
     @Transactional
     public Member saveMember(MemberDto memberDto) {
         validateDuplicateMember(memberDto);
 
-        Member member = memberDto.toEntity(memberDto);
+        Member member = Member.builder()
+                .username(memberDto.getUsername())
+                .email(memberDto.getEmail())
+                .password(passwordEncoder.encode(memberDto.getPassword()))
+                .build();
         return memberRepository.save(member);
     }
 
-    @Transactional
-    public Member login(String email, String password) {
-        Member member = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalStateException("해당 이메일이 존재하지 않습니다."));
-        
-        if (!member.getPassword().equals(password)) {
-            throw new IllegalStateException("잘못된 비밀번호입니다.");
-        }
-        return member;
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Member member = memberRepository.findByEmail(username)
+                .orElseThrow(() -> new UsernameNotFoundException("해당 이메일 없음"));
+
+        return new MemberUserDetails(member);
+
     }
 
     private void validateDuplicateMember(MemberDto memberDto) {

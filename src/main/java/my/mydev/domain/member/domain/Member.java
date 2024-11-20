@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import my.mydev.domain.address.domain.Address;
 import my.mydev.domain.order.domain.Order;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +20,9 @@ import java.util.List;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Member {
+public class Member implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,8 +34,11 @@ public class Member {
     @Email
     private String email;
     @NotNull
-    @Size(min=6)
+    @Size(min = 6)
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Order> orders;
@@ -44,9 +50,15 @@ public class Member {
         this.username = username;
         this.email = email;
         this.password = password;
+        this.role = Role.USER;
         this.orders = new ArrayList<>();
         this.address = new ArrayList<>(); // npe 방지
 
     }
+
+
+
+
+
 
 }

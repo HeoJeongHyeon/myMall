@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>회원가입</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #ffe5f1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .signup-container {
+            background: #fffaf3;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .form-title {
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #ff66b3;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-control {
+            border: 2px solid #ffb3d9;
+            border-radius: 10px;
+        }
+
+        .form-control:focus {
+            box-shadow: 0 0 5px rgba(255, 102, 179, 0.5);
+            border-color: #ff66b3;
+        }
+
+        .btn-signup {
+            background-color: #ff66b3;
+            border: none;
+            border-radius: 10px;
+            padding: 0.75rem;
+            color: white;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-signup:hover {
+            background-color: #ff3399;
+        }
+
+        .error-message {
+            color: #ff4d4d;
+            font-size: 0.9rem;
+            margin-top: 0.2rem;
+        }
+
+        .home-link {
+            display: block;
+            text-align: center;
+            margin-top: 1rem;
+            color: #ff66b3;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .home-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<div class="signup-container">
+    <h2 class="form-title">회원가입</h2>
+
+    <form th:action="@{/signup}" th:object="${memberDto}" method="post">
+        <div class="mb-3">
+            <label for="username" class="form-label">이름</label>
+            <input type="text" id="username" class="form-control" th:field="*{username}" placeholder="이름을 입력하세요" />
+            <span class="error-message" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></span>
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">이메일</label>
+            <input type="email" id="email" class="form-control" th:field="*{email}" placeholder="이메일을 입력하세요" />
+            <span class="error-message" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">비밀번호</label>
+            <input type="password" id="password" class="form-control" th:field="*{password}" placeholder="비밀번호를 입력하세요" />
+            <span class="error-message" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+        </div>
+        <button type="submit" class="btn btn-signup w-100">가입하기</button>
+    </form>
+
+    <a th:href="@{/}" class="home-link">홈으로 돌아가기</a>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
