@@ -19,11 +19,7 @@ public class MemberService implements UserDetailsService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
-    @PostConstruct
-    public void init() {
-        /* 관리자 계정 생성*/
-        Member member =
-    }
+
 
     @Transactional
     public Member saveMember(MemberDto memberDto) {

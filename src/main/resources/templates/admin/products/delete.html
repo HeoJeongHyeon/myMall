@@ -1,0 +1,54 @@
+<!--
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>상품 삭제</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/home">My Shop</a>
+    <div class="collapse navbar-collapse">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{/admin/products}">관리자 메뉴</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container mt-4">
+  <div class="card">
+    <div class="card-header bg-danger text-white">
+      <h2>상품 삭제 확인</h2>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-4">
+          <img th:src="${productDTO.imageUrl}" class="img-fluid" alt="상품 이미지">
+        </div>
+        <div class="col-md-8">
+          <h3 th:text="${productDTO.name}">상품명</h3>
+          <p class="text-muted" th:text="${productDTO.description}">상품 설명</p>
+          <p class="fw-bold" th:text="${productDTO.price + '원'}">가격</p>
+          <p>재고: <span th:text="${productDTO.stock}"></span>개</p>
+
+          <div class="alert alert-warning">
+            <strong>주의!</strong> 이 상품을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.
+          </div>
+
+          <form th:action="@{/admin/products/{id}/delete(id=${productDTO.id})}" method="post">
+            <button type="submit" class="btn btn-danger">삭제</button>
+            <a th:href="@{/products/{id}(id=${productDTO.id})}" class="btn btn-secondary">취소</a>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>-->

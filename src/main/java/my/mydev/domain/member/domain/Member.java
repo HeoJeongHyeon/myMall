@@ -5,10 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import my.mydev.domain.address.domain.Address;
 import my.mydev.domain.order.domain.Order;
 
@@ -56,9 +53,18 @@ public class Member implements Serializable {
 
     }
 
-
-
-
+    /* 관리자 테스트동안 사용하려고 임시 생성 마지막에 코드 정리할 때 에드민 생성용 하나 만들어야함.*/
+    // ADMIN용 정적 팩토리 메서드
+    public static Member createAdmin(String username, String email, String password) {
+        Member admin = new Member();
+        admin.username = username;
+        admin.email = email;
+        admin.password = password;
+        admin.role = Role.ADMIN;
+        admin.orders = new ArrayList<>();
+        admin.address = new ArrayList<>();
+        return admin;
+    }
 
 
 }

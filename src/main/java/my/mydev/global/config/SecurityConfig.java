@@ -2,6 +2,7 @@ package my.mydev.global.config;
 
 import lombok.RequiredArgsConstructor;
 import my.mydev.domain.member.service.MemberService;
+import my.mydev.global.handler.CustomAuthenticationSuccessHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,16 +17,20 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
+    private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, UserDetailsService userDetailsService) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, UserDetailsService userDetailsService, CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/signup", "/login", "/css/**", "/js/**").permitAll()
+                        .requestMatchers("/products/**").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .formLogin(form -> form.loginPage("/login")
-                        .defaultSuccessUrl("/home", true)
+                        .successHandler(customAuthenticationSuccessHandler)
                         .usernameParameter("email")
                         .failureUrl("/login?error")
                         .permitAll())
@@ -34,12 +39,12 @@ public class SecurityConfig {
                         .deleteCookies("JSESSIONID")
                         .permitAll())
                 .sessionManagement(session -> session
-                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-                .maximumSessions(1)
-                .expiredUrl("/login?expired"))
+                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                        .maximumSessions(1)
+                        .expiredUrl("/login?expired"))
                 .rememberMe(remember -> remember  // Remember-me 기능 추가
                         .key("uniqueAndSecret")
-                        .tokenValiditySeconds(86400)) // 24시간
+                        .tokenValiditySeconds(1000))
                 .csrf(csrf -> csrf.disable());  // 개발 중에는 CSRF 비활성화 (실제 운영시에는 활성화 필요)
         return http.build();
     }
