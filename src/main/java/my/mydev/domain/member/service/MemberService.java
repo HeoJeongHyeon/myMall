@@ -3,6 +3,7 @@ package my.mydev.domain.member.service;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import my.mydev.domain.member.domain.Member;
 import my.mydev.domain.member.dto.MemberDto;
 import my.mydev.domain.member.repository.MemberRepository;
@@ -14,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class MemberService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
@@ -48,4 +50,13 @@ public class MemberService implements UserDetailsService {
             throw new IllegalStateException("이미 가입된 이메일입니다.");
         }
     }
+
+    public Member findByEmail(String email) {
+        log.info("findbyEmail = {} ", memberRepository.findByEmail(email));
+        return memberRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("해당 이메일 음슴."));
+
+    }
+
+
 }

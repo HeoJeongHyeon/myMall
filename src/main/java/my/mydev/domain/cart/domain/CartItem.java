@@ -1,11 +1,15 @@
 package my.mydev.domain.cart.domain;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import my.mydev.domain.Product.domain.Product;
 
 import java.math.BigDecimal;
 
 @Entity
+@Getter
+@Setter
 public class CartItem {
 
     @Id
@@ -22,7 +26,7 @@ public class CartItem {
 
     private Integer quantity;
 
-    private BigDecimal price;
+    private int price;
 
     // 기본 생성자, Getter, Setter
 }

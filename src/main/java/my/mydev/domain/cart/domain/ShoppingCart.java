@@ -2,11 +2,15 @@ package my.mydev.domain.cart.domain;
 
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import my.mydev.domain.member.domain.Member;
 
 import java.util.List;
 
 @Entity
+@Setter
+@Getter
 public class ShoppingCart {
 
     @Id

@@ -37,6 +37,8 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<OrderItem> orderItems;
 
+
+
     @Builder
     public Product(String name, String description, int price, int stockQuantity) {
         this.name = name;
