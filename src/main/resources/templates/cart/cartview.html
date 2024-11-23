@@ -21,7 +21,7 @@
     <!-- 네비게이션 바 -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
-            <a class="navbar-brand" th:href="@{/}">My Shop</a>
+            <a class="navbar-brand" th:href="@{/home}">My Shop</a>
 
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav">
@@ -85,7 +85,7 @@
                             </td>
                             <td class="fw-bold" th:text="${#numbers.formatInteger(item.totalPrice, 0, 'COMMA')} + '원'"></td>
                             <td>
-                                <form th:action="@{/cart/remove/{id}(id=${item.id})}" method="post" class="d-inline">
+                                <form th:action="@{/cart/delete/{id}(id=${item.id})}" method="post" class="d-inline">
                                     <button type="submit" class="btn btn-danger btn-sm">
                                         <i class="bi bi-trash"></i> 삭제
                                     </button>

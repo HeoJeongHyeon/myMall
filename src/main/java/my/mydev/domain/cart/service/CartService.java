@@ -80,4 +80,12 @@ public class CartService {
                         .build())
                 .collect(Collectors.toList());
     }
+
+    public void deleteCartItem(Long cartItemId) {
+        log.info("what is id = {}",cartItemId);
+        CartItem cartItem = cartItemRepository.findById(cartItemId)
+                .orElseThrow(() -> new IllegalArgumentException("상품음슴"));
+        log.info("cartItem = {}", cartItem);
+        cartItemRepository.delete(cartItem);
+    }
 }

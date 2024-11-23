@@ -2,6 +2,7 @@ package my.mydev.domain.cart.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import my.mydev.domain.Product.service.ProductService;
 import my.mydev.domain.cart.dto.CartItemDto;
 import my.mydev.domain.cart.service.CartService;
 import my.mydev.domain.member.domain.Member;
@@ -10,10 +11,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -26,6 +24,7 @@ public class CartController {
 
     private final CartService cartService;
     private final MemberService memberService;
+    private final ProductService productService;
 
     @PostMapping("/add")
     public String addCart(@AuthenticationPrincipal UserDetails userDetails,
@@ -33,18 +32,12 @@ public class CartController {
                           @RequestParam("quantity") Integer stockQuantity,
                           RedirectAttributes redirectAttributes) {
         try {
-            log.info("상품 장바구니 시작1");
-            log.info("userDetails email: {}", userDetails.getUsername());
             Member member = memberService.findByEmail(userDetails.getUsername());
-            log.info("찾은 member 정보: {}", member.getEmail());
-            log.info("상품 장바구니 시작2");
             cartService.addCart(member.getId(), productId, stockQuantity);
-            log.info("상품 장바구니 시작3");
             redirectAttributes.addFlashAttribute("message", "상품 장바구니에 추가 ");
 
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("message", e.getMessage());
-            log.info("상품 장바구니 오류 발생");
         }
         return "redirect:/products/list"; // 상품 목록 페이지로 리다이렉트
     }
@@ -68,6 +61,16 @@ public class CartController {
         return "cart/cartview";
     }
 
-    /* Cart 삭제 */
+    @PostMapping("/delete/{id}")
+    public String deleteCartItem(@PathVariable(name = "id") Long cartItemId, RedirectAttributes redirectAttributes) {
+        try {
+            log.info("what is id = {}",cartItemId);
+            cartService.deleteCartItem(cartItemId);
+        } catch (Exception e) {
+            log.info("what is id = {}",cartItemId);
+            redirectAttributes.addFlashAttribute("message", " 장바구니 삭제 실패 ");
+        }
+        return "redirect:/home";
+    }
 
 }
