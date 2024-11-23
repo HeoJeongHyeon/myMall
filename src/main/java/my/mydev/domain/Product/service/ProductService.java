@@ -9,6 +9,8 @@ import my.mydev.domain.Product.domain.Product;
 import my.mydev.domain.Product.dto.ProductDto;
 import my.mydev.domain.Product.repository.ProductRepository;
 import my.mydev.domain.member.repository.MemberRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,6 +30,13 @@ public class ProductService {
                 .stream()
                 .map(ProductDto::from)
                 .collect(Collectors.toList());
+    }
+
+    /* 페이징 처리 수정중 */
+    public Page<ProductDto> getProductPage(int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return productRepository.findAll(pageRequest)
+                .map(ProductDto::from);
     }
 
     /* 유저가 상품클릭시 상세 조회 */

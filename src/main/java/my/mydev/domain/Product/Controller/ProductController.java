@@ -4,6 +4,9 @@ import lombok.RequiredArgsConstructor;
 import my.mydev.domain.Product.domain.Product;
 import my.mydev.domain.Product.dto.ProductDto;
 import my.mydev.domain.Product.service.ProductService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,10 +26,20 @@ public class ProductController {
      * 상품 상세
      * 카테고리별 상품
      * */
-    @GetMapping("/list")
+    /*@GetMapping("/list")
     public String list(Model model) {
         List<ProductDto> products = productService.findAll();
         model.addAttribute("products", products);
+        return "products/list";
+    }*/
+
+    @GetMapping("/list")
+    public String list(@PageableDefault(size = 9) Pageable pageable, Model model) {
+        Page<ProductDto> productDtoPage = productService.getProductPage(
+                pageable.getPageNumber(),
+                pageable.getPageSize()
+        );
+        model.addAttribute("products", productDtoPage);
         return "products/list";
     }
 
