@@ -1,0 +1,370 @@
+<!--<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>새 주소 등록</title>
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <style>
+        &lt;!&ndash; 기존 스타일 유지 &ndash;&gt;
+    </style>
+</head>
+<body>
+<div class="address-form">
+    <h2>새 배송지 입력</h2>
+
+    <form th:action="@{/address/add}" method="post" th:object="${addressDto}">
+        &lt;!&ndash; 장바구니 아이템 ID들을 hidden 필드로 전달 &ndash;&gt;
+        <div th:if="${cartItemIds != null}">
+            <input type="hidden"
+                   name="cartItemId"
+                   th:each="id : ${cartItemIds}"
+                   th:value="${id}">
+        </div>
+
+        <div class="form-group">
+            <label for="zipCode">우편번호</label>
+            <div style="display: flex; gap: 10px;">
+                <input type="text" id="zipCode" th:field="*{zipCode}" readonly>
+                <button type="button" class="btn btn-secondary" onclick="execDaumPostcode()">우편번호 찾기</button>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="fullAddress">기본 주소</label>
+            <input type="text" id="fullAddress" th:field="*{fullAddress}" readonly>
+        </div>
+
+        <div class="form-group">
+            <label for="addressDetail">상세 주소</label>
+            <input type="text" id="addressDetail" th:field="*{addressDetail}" placeholder="상세 주소를 입력해주세요">
+        </div>
+
+        <div class="button-group">
+            <button type="submit" class="btn btn-primary">저장하기</button>
+            <a th:href="@{/order/form}" class="btn btn-secondary">취소</a>
+        </div>
+    </form>
+</div>
+
+<script>
+    // 기존 스크립트 유지
+</script>
+</body>
+</html>-->
+<!--<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>새 주소 등록</title>
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .address-form {
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 2rem;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body class="bg-light">
+<div class="container">
+    <div class="address-form bg-white">
+        <h2 class="mb-4">새 배송지 입력</h2>
+
+        <form th:action="@{/address/add}" method="post" th:object="${addressDto}">
+            &lt;!&ndash; 장바구니 아이템 ID 전달을 위한 hidden 필드들 &ndash;&gt;
+            <div th:if="${cartItemIds != null}">
+                <input type="hidden"
+                       name="cartItemId"
+                       th:each="id : ${cartItemIds}"
+                       th:value="${id}">
+            </div>
+
+            <div class="mb-3">
+                <label for="zipCode" class="form-label">우편번호</label>
+                <div class="input-group">
+                    <input type="text"
+                           class="form-control"
+                           id="zipCode"
+                           th:field="*{zipCode}"
+                           readonly
+                           required>
+                    <button type="button"
+                            class="btn btn-secondary"
+                            onclick="execDaumPostcode()">
+                        우편번호 찾기
+                    </button>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="fullAddress" class="form-label">기본 주소</label>
+                <input type="text"
+                       class="form-control"
+                       id="fullAddress"
+                       th:field="*{fullAddress}"
+                       readonly
+                       required>
+            </div>
+
+            <div class="mb-3">
+                <label for="addressDetail" class="form-label">상세 주소</label>
+                <input type="text"
+                       class="form-control"
+                       id="addressDetail"
+                       th:field="*{addressDetail}"
+                       required
+                       placeholder="상세 주소를 입력해주세요">
+            </div>
+
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <button type="submit" class="btn btn-primary me-md-2">저장하기</button>
+                <a th:href="@{/order/form}" class="btn btn-secondary">취소</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function execDaumPostcode() {
+        new daum.Postcode({
+            oncomplete: function(data) {
+                // 우편번호와 주소 정보를 해당 필드에 넣는다.
+                document.getElementById('zipCode').value = data.zonecode;
+                document.getElementById('fullAddress').value = data.address;
+
+                // 값이 변경되었음을 Thymeleaf에 알리기 위해 이벤트 발생
+                document.getElementById('zipCode').dispatchEvent(new Event('change'));
+                document.getElementById('fullAddress').dispatchEvent(new Event('change'));
+
+                // 상세주소 필드로 포커스 이동
+                document.getElementById('addressDetail').focus();
+            }
+        }).open();
+    }
+
+    // 폼 제출 전 검증
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const zipCode = document.getElementById('zipCode').value;
+        const fullAddress = document.getElementById('fullAddress').value;
+        const addressDetail = document.getElementById('addressDetail').value;
+
+        if (!zipCode || !fullAddress || !addressDetail) {
+            e.preventDefault();
+            alert('모든 주소 정보를 입력해주세요.');
+            return false;
+        }
+    });
+</script>
+</body>
+</html>-->
+<!--<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>새 주소 등록</title>
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .address-form {
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 2rem;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            background-color: white;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+    </style>
+</head>
+<body class="bg-light">
+<div class="container">
+    <div class="address-form">
+        <h2 class="mb-4">새 배송지 입력</h2>
+
+        <form th:action="@{/address/add}" method="post" th:object="${addressDto}">
+            &lt;!&ndash; 장바구니 아이템 ID 전달을 위한 hidden 필드들 &ndash;&gt;
+            <div th:if="${param.cartItemId != null}">
+                <input type="hidden"
+                       name="cartItemId"
+                       th:each="id : ${param.cartItemId}"
+                       th:value="${id}">
+            </div>
+
+            <div class="form-group">
+                <label for="zipCode" class="form-label">우편번호</label>
+                <div class="input-group">
+                    <input type="text"
+                           class="form-control"
+                           id="zipCode"
+                           name="zipCode"
+                           th:field="*{zipCode}"
+                           readonly
+                           required>
+                    <button type="button"
+                            class="btn btn-secondary"
+                            onclick="execDaumPostcode()">
+                        우편번호 찾기
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="fullAddress" class="form-label">기본 주소</label>
+                <input type="text"
+                       class="form-control"
+                       id="fullAddress"
+                       name="fullAddress"
+                       th:field="*{fullAddress}"
+                       readonly
+                       required>
+            </div>
+
+            <div class="form-group">
+                <label for="addressDetail" class="form-label">상세 주소</label>
+                <input type="text"
+                       class="form-control"
+                       id="addressDetail"
+                       name="addressDetail"
+                       th:field="*{addressDetail}"
+                       placeholder="상세 주소를 입력해주세요"
+                       required>
+            </div>
+
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                <button type="submit" class="btn btn-primary me-md-2">저장하기</button>
+                <a th:href="@{/order/form}" class="btn btn-secondary">취소</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function execDaumPostcode() {
+        new daum.Postcode({
+            oncomplete: function(data) {
+                // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분
+                document.querySelector('input[name="zipCode"]').value = data.zonecode;
+                document.querySelector('input[name="fullAddress"]').value = data.address;
+
+                // 값이 변경되었음을 Thymeleaf에 알리기 위해 이벤트 발생
+                document.querySelector('input[name="zipCode"]').dispatchEvent(new Event('change'));
+                document.querySelector('input[name="fullAddress"]').dispatchEvent(new Event('change'));
+
+                // 상세주소 필드로 포커스 이동
+                document.querySelector('input[name="addressDetail"]').focus();
+            }
+        }).open();
+    }
+
+    // 폼 제출 전 유효성 검사
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const zipCode = document.querySelector('input[name="zipCode"]').value;
+        const fullAddress = document.querySelector('input[name="fullAddress"]').value;
+        const addressDetail = document.querySelector('input[name="addressDetail"]').value;
+
+        if (!zipCode || !fullAddress || !addressDetail) {
+            e.preventDefault();
+            alert('모든 주소 정보를 입력해주세요.');
+        }
+    });
+</script>
+</body>
+</html>-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>새 주소 등록</title>
+    <!-- 다음 우편번호 API -->
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <style>
+        .address-form {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+        .button-group {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="address-form">
+    <h2>새 배송지 입력</h2>
+    <!-- 추가-->
+
+    <form th:action="@{/address/add}" th:object="${addressDto}" method="post">
+        <div class="form-group">
+            <label for="zipCode">우편번호</label>
+            <div style="display: flex; gap: 10px;">
+                <input type="text" id="zipCode" th:field="*{zipCode}" readonly>
+                <button type="button" class="btn btn-secondary" onclick="execDaumPostcode()">우편번호 찾기</button>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="fullAddress">기본 주소</label>
+            <input type="text" id="fullAddress" th:field="*{fullAddress}" readonly>
+        </div>
+
+        <div class="form-group">
+            <label for="detailAddress">상세 주소</label>
+            <input type="text" id="detailAddress" th:field="*{addressDetail}" placeholder="상세 주소를 입력해주세요">
+        </div>
+
+        <div class="button-group">
+            <button type="submit" class="btn btn-primary">저장하기</button>
+            <a th:href="@{/order/form}" class="btn btn-secondary">취소</a>
+        </div>
+    </form>
+</div>
+
+<script>
+    function execDaumPostcode() {
+        new daum.Postcode({
+            oncomplete: function(data) {
+                // 우편번호와 주소 정보를 해당 필드에 넣는다.
+                document.getElementById('zipCode').value = data.zonecode;
+                document.getElementById('fullAddress').value = data.address;
+                // 상세주소 필드로 포커스 이동
+                document.getElementById('detailAddress').focus();
+            }
+        }).open();
+    }
+</script>
+</body>
+</html>

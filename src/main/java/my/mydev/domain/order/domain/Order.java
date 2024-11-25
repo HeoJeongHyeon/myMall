@@ -21,7 +21,7 @@ public class Order {
     * 회원과 주문
     * 한 회원은 여러개의 주문을 할 수 있으며, 주문은 한 회원으로부터 주문된다.
     * 회원 1 : N 주문
-    * 연관관계의 주인인 설정 mappedBy를 여기서 쓰면 안됌.
+    * 연관관계의 주인이 하는 설정 mappedBy를 여기서 쓰면 안됌.
     * */
     @ManyToOne
     @JoinColumn(name = "member_id")

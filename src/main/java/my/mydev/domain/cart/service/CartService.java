@@ -63,12 +63,25 @@ public class CartService {
         }
     }
 
+    public List<CartItemDto> getCartItemsByIds(List<Long> cartItemIds) {
+        List<CartItem> cartItems = cartItemRepository.findAllById(cartItemIds);
+        return cartItems.stream()
+                .map(item -> CartItemDto.builder()
+                        .id(item.getId())
+                        .productName(item.getProduct().getName())
+                        .quantity(item.getQuantity())
+                        .price(item.getPrice())
+                        .totalPrice(item.getPrice() * item.getQuantity())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+
     public List<CartItemDto> getCartItems(Long id) {
         // 멤버이름으로 find
         ShoppingCart cart = cartRepository.findByMemberId(id)
                 .orElseThrow(() -> new IllegalArgumentException("장바구니를 찾을 수 없습니다."));
         log.info("Cart = {} ", cartRepository.findByMemberId(id));
-        log.info("Cart = {} ","member= {} ",cart.getId(),cart.getMember());
 
         return cart.getCartItems().stream()
                 .map(item -> CartItemDto.builder()
