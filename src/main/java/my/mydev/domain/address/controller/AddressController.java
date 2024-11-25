@@ -28,7 +28,7 @@ public class AddressController {
     public String addAddressForm(@ModelAttribute("addressDto") AddressDto addressDto,
                                  @RequestParam(value = "cartItemId", required = false) List<Long> cartItemIds,
                                  Model model) {
-        model.addAttribute("cartItemIds", cartItemIds);
+        model.addAttribute("cartItemId", cartItemIds);
         return "address/add";
     }
 
@@ -67,7 +67,7 @@ public class AddressController {
                 }
             }
 
-            return "redirect:/cart/cartview";
+            return "redirect:/order/form?cartItemId="+cartItemIds;
 
         } catch (Exception e) {
             log.error("Error saving address", e);

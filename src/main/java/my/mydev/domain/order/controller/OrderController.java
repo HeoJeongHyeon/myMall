@@ -29,7 +29,7 @@ public class OrderController {
 
     @GetMapping("/form")
     public String orderForm(@AuthenticationPrincipal UserDetails userDetails,
-                            @RequestParam(value="cartItemId",required = false) List<Long> cartItemIds,
+                            @RequestParam(value="cartItemId",required = false) String cartItemIds,
                             @RequestParam(value="addressId",required = false) Long addressId,
                             Model model) {
         /*주문 결제 폼을 뿌려야함.*/
@@ -51,6 +51,7 @@ public class OrderController {
             // 장바구니 아이템이 있는 경우에만 처리
             if (cartItemIds != null && !cartItemIds.isEmpty()) {
                 List<CartItemDto> cartItems = cartService.getCartItems(member.getId());
+                log.info("cartItems = {}", cartItems.toArray());
                 int totalAmount = cartItems.stream()
                         .mapToInt(CartItemDto::getTotalPrice)
                         .sum();
@@ -71,7 +72,7 @@ public class OrderController {
 
     @PostMapping("/form")
     public String orderForm(@AuthenticationPrincipal UserDetails userDetails,
-                            @RequestParam("cartItemId") List<Long> cartItemIds,
+                            @RequestParam("cartItemId") String cartItemIds,
                             @RequestParam("addressId") Long addressId) {
         return "redirect:/cart/cartview";
     }

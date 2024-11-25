@@ -24,7 +24,7 @@ public class MemberService implements UserDetailsService {
 
 
     @Transactional
-    public Member saveMember(MemberDto memberDto) {
+    public void saveMember(MemberDto memberDto) {
         validateDuplicateMember(memberDto);
 
         Member member = Member.builder()
@@ -32,7 +32,7 @@ public class MemberService implements UserDetailsService {
                 .email(memberDto.getEmail())
                 .password(passwordEncoder.encode(memberDto.getPassword()))
                 .build();
-        return memberRepository.save(member);
+                memberRepository.save(member);
     }
 
 

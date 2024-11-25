@@ -119,6 +119,7 @@
                     <a th:href="@{/products/list}" class="btn btn-secondary">
                         <i class="bi bi-arrow-left"></i> 쇼핑 계속하기
                     </a>
+<!--                    <form th:action="@{/order/{id}/form(id=${cartItems})}" method="get" id="orderForm">-->
                     <form th:action="@{/order/form}" method="get" id="orderForm">
                         <button type="submit" class="btn btn-primary" id="orderButton">
                             <i class="bi bi-credit-card"></i> 주문하기

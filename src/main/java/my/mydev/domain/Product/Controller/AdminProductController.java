@@ -26,7 +26,6 @@ public class AdminProductController {
     public String dashboard(Model model) {
         List<ProductDto> product = productService.findAll();
         model.addAttribute("products", product);
-        log.info("Found {} products", product.size());  // 로그 추가
         return "admin/dashboard";
     }
 
@@ -47,19 +46,15 @@ public class AdminProductController {
         return "admin/products/addProduct";
     }
 
-    /* 상품 추가 */
-    /* /admin/products/add*/
     @PostMapping("/products/addProduct")
     public String addProduct(@Valid @ModelAttribute("productDto") ProductDto productDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "admin/products/addProduct";
         }
         productService.addProduct(productDto);
-        return "redirect:/admin/dashboard"; /* 상품 업로드시 바로 확인할 수 있게.*/
+        return "redirect:/admin/dashboard";
     }
 
-    /* 상품 수정 */
-    /* /admin/products/{id}/edit*/
     @GetMapping("/products/{id}/editProduct")
     public String editProduct(@PathVariable (name = "id")Long id, Model model) {
         ProductDto productdto = productService.findById(id);

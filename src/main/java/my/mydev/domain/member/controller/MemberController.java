@@ -19,7 +19,6 @@ public class MemberController {
 
     @GetMapping("/")
     public String home() {
-//        model.addAttribute("member", userDetails.getMember());
         return "index";
     }
 
