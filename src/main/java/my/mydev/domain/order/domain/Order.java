@@ -2,6 +2,11 @@ package my.mydev.domain.order.domain;
 
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import my.mydev.domain.address.domain.Address;
 import my.mydev.domain.member.domain.Member;
 
 import java.time.LocalDateTime;
@@ -10,6 +15,10 @@ import java.util.List;
 
 @Entity
 @Table(name = "orders")
+@Builder
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Order {
 
     @Id
@@ -30,10 +39,14 @@ public class Order {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> orderItems;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "address_id")
+    private Address address;
 
     private LocalDateTime orderDate;
 
-    // ENUM 타입 반드시 String으로 지정해야 중복오류 없음.
-    @Enumerated(EnumType.STRING)
-    private OrderStatus status;
+    public void setOrderItems(List<OrderItem> orderItems) {
+        this.orderItems = orderItems;
+        orderItems.forEach(orderItem -> orderItem.setOrder(this));
+    }
 }

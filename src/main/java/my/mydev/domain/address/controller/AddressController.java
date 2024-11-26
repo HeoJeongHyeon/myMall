@@ -15,6 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
+
 @Controller
 @RequestMapping("/address")
 @RequiredArgsConstructor
@@ -59,15 +60,12 @@ public class AddressController {
 
             // 장바구니 아이템 ID 전달
             if (cartItemIds != null && !cartItemIds.isEmpty()) {
-/*
-                cartItemIds.forEach(id -> redirectAttributes.addAttribute("cartItemId", id));
-*/
                 for (Long id : cartItemIds){
                     redirectAttributes.addAttribute("cartItemId", id);
                 }
             }
 
-            return "redirect:/order/form?cartItemId="+cartItemIds;
+            return "redirect:/order/form";
 
         } catch (Exception e) {
             log.error("Error saving address", e);

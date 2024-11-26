@@ -4,18 +4,24 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import my.mydev.domain.address.dto.AddressDto;
 import my.mydev.domain.address.service.AddressService;
+import my.mydev.domain.cart.domain.CartItem;
 import my.mydev.domain.cart.dto.CartItemDto;
 import my.mydev.domain.cart.service.CartService;
 import my.mydev.domain.member.domain.Member;
 import my.mydev.domain.member.repository.MemberRepository;
 import my.mydev.domain.member.service.MemberService;
+import my.mydev.domain.order.dto.OrderDto;
+import my.mydev.domain.order.service.OrderService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequestMapping("/order")
 @Controller
@@ -25,18 +31,14 @@ public class OrderController {
     private final MemberService memberService;
     private final AddressService addressService;
     private final CartService cartService;
-    private final MemberRepository memberRepository;
-
+    private final OrderService orderService;
     @GetMapping("/form")
     public String orderForm(@AuthenticationPrincipal UserDetails userDetails,
                             @RequestParam(value="cartItemId",required = false) String cartItemIds,
                             @RequestParam(value="addressId",required = false) Long addressId,
                             Model model) {
-        /*주문 결제 폼을 뿌려야함.*/
-        /* 멤버id와 연관된 cart의 list를 다 가져와서 매핑.
-         * 주소 입력창에 Address도 저장해야함.
-         * 결제하기 누르면 완료되고, 내 주문 내역을 조회 */
-        try{
+
+        try {
             Member member = memberService.findByEmail(userDetails.getUsername());
             log.info("memberId = {}", member.getId());
             // 저장된 주소 목록
@@ -44,7 +46,7 @@ public class OrderController {
             log.info("addresses = {}", addresses);
             model.addAttribute("addresses", addresses);
 
-            /**/
+
             if (addressId != null) {
                 model.addAttribute("addressId", addressId);
             }
@@ -60,7 +62,7 @@ public class OrderController {
                 model.addAttribute("cartItemsIds", cartItemIds);
                 model.addAttribute("totalAmount", totalAmount);
                 model.addAttribute("cartItems", cartItems);
-                /**/
+
             }
         } catch (Exception e) {
             log.error("주문폼 생성 오류",e);
@@ -72,17 +74,45 @@ public class OrderController {
 
     @PostMapping("/form")
     public String orderForm(@AuthenticationPrincipal UserDetails userDetails,
-                            @RequestParam("cartItemId") String cartItemIds,
-                            @RequestParam("addressId") Long addressId) {
-        return "redirect:/cart/cartview";
+                            @RequestParam("cartItemIds") String cartItemIds,
+                            @RequestParam("addressId") Long addressId,
+                            RedirectAttributes redirectAttributes) {
+        try {
+            String username = userDetails.getUsername();
+            Member member = memberService.findByEmail(username);
+            log.info("@@@@@@@ 아이디 memberId = {}", member.getId());
+            log.info("@@@@@@@ 아이디 cartItemId = {}", cartItemIds);
+            List<Long> cartItemIdList = Arrays.stream(cartItemIds.split(","))
+                    .map(String::trim)
+                    .map(Long::parseLong)
+                    .collect(Collectors.toList());
+            // 변환된 리스트가 비어있는지 체크
+            if (cartItemIdList.isEmpty()) {
+                throw new IllegalArgumentException("유효한 장바구니 아이템이 없습니다.");
+            }
+            Long orderId = orderService.createOrder(member.getId(), cartItemIdList, addressId);
+            redirectAttributes.addFlashAttribute("successMessage", "주문 성공");
+
+        } catch (Exception e) {
+            log.error("주문 처리 중 오류 발생", e);
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/cart/cartview";
+        }
+
+        return "redirect:/order/orderview";
     }
 
-    @GetMapping("/direct")
-    public String orderDirect() {
+    @GetMapping("/orderview")
+    public String orderView(@AuthenticationPrincipal UserDetails userDetails,Model model) {
+        try {
+            Member member = memberService.findByEmail(userDetails.getUsername());
+            List<OrderDto> orders = orderService.getOrdersByMemberId(member.getId());
+            model.addAttribute("orders", orders);
+            return "order/orderview";
+        } catch (Exception e) {
+            log.error("주문 내역 조회 중 오류 발생", e);
+            return "redirect:/";
+        }
 
-        /* 바로 주문하기 창으로 이동해야함.
-         * 현재 해당 ProductId를 가져와서 주문입력 폼에 매핑
-         * */
-        return "form";
     }
 }
